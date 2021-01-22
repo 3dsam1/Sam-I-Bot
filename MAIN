@@ -1,0 +1,224 @@
+const Discord = require('discord.js');
+const client = new Discord.Client();
+var prefix = '?';
+
+const fs = require('fs');
+const funCommand = 'testing';
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands/').filter(file=> file.endsWith('.js'));
+
+for(const file of commandFiles){
+    const command = require(`./commands/${file}`);
+
+    client.commands.set(command.name, command);
+        
+    console.log(command)
+}
+var anime = `anime`; 
+
+//bot bootup
+client.once('ready', () => {
+    console.log('Bot is online')
+   client.channels.fetch('763703586592784395') .then(channel => {
+    channel.send('Sam-I-Bot is back online! Sorry for the down time.')
+ 
+})
+})
+
+// prefix commands
+client.on('message', async message => {
+if(!message.content.startsWith(prefix) || message.author.bot ) return;
+
+const args = message.content.slice(prefix.length).split(/ +/); // Going to remove the prefix from the arguments, and then split each arg into a sperate one when typing a string. 
+const command = args.shift(). toLowerCase(); // going to shift all commands to lower case to allow people to type ?ping or ?PING and get the same result.
+
+
+
+if(command === 'ping'){
+    client.commands.get('ping').execute(message, args); 
+}   
+ else if(command === 'kick'){
+     client.commands.get('moderation').execute(message, args)
+}
+else if(command === 'ban'){
+    client.commands.get('ban').execute(message,args)
+}
+else if(command === 'poll'){
+    client.commands.get('poll').execute(message,args)
+}
+else if(command === 'avatar'){
+    client.commands.get('avatar').execute(message,args,prefix)
+}
+
+else if(command === 'speaker' || command === 'speaking'){
+    client.commands.get('speaker').execute(message,args)
+}
+else if(command === 'clear'){
+    client.commands.get('clear').execute(message,args)
+}
+else if(command === 'feed'){
+    client.commands.get('feed').execute(message,args)
+}
+else if(command === 'dm'){
+    message.author.send('I dmed you')
+}
+else if(command === 'setanime'){
+    args.join(" ").slice(32);
+
+    if(args < 1){
+        message.channel.send('You need to specify which anime you are watching!')
+    }
+    
+    else{
+        message.channel.send(`You have set the current anime to ${args.join(" ")}`)
+        anime = args.join(" ");
+    }
+
+}    
+else if(command === 'anime'){
+    message.channel.send(`The current anime that we are watching is ${anime}`)
+}
+else if (command === ' invite'){
+    message.channel.send('https://discord.com/oauth2/authorize?client_id=573922643527335938&scope=bot&permissions=8')
+}
+
+
+
+
+// TGIF RR EMBED
+else if(command === 'createreactionstgif'){
+
+    const reactionEmbed = new Discord.MessageEmbed()
+        .setTitle('Reaction Roles')
+        .setDescription('React to gain the role!' )
+        .setColor('RED')
+
+    let msgEmbed = await message.channel.send(reactionEmbed)
+    msgEmbed.react('✔')
+    msgEmbed.react('625018034808946699')
+    msgEmbed.react('625020976899293206')
+    msgEmbed.react('625018401395441704')
+    msgEmbed.react('625018132746207233')
+    msgEmbed.react('625019053571833866')
+    msgEmbed.react('768242486245851136')
+    .catch(err => {
+        console.log(err)
+    })
+}
+
+})
+
+// fun commands (w/o prefix)
+client.on('message', async message => {
+const args = message.content.slice(prefix.length).split(" ");
+const command = args.shift(). toLowerCase();
+if (message.author.bot) return;
+if(!message.content.startsWith(prefix)){
+   client.commands.get('funCommands').execute(message, args)
+
+
+}
+})
+
+
+// reaction roles
+
+// When they react
+client.on('messageReactionAdd', async (reaction, user) => {
+
+    if(reaction.message.partial) await reaction.message.fetch();
+    if(user.bot) return;
+
+        
+  // TGIF RR START
+    if(reaction.message.channel.id === '709374096244342794'){
+  
+    
+
+
+
+      if(reaction.emoji.id === '625018034808946699'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.add("526472321930887169")
+            
+        }
+    else if(reaction.emoji.id === '625020976899293206'){ 
+
+            await reaction.message.guild.members.cache.get(user.id).roles.add("523870470131548165")
+            
+        }
+        else if(reaction.emoji.id === '625018401395441704'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.add("563510639478308864")
+            
+        }
+        else if(reaction.emoji.id === '625018132746207233'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.add("533770641636327425")
+            
+        }
+        else if(reaction.emoji.id === '625019053571833866'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.add("564455132012740608")
+            
+        }
+        else if(reaction.emoji.id === '768242486245851136'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.add("741830919744127088")
+            
+        }
+      
+      
+    }
+ // TGIF RR END
+})
+
+
+//  When they unreact
+client.on('messageReactionRemove', async (reaction, user) => {
+
+    if(reaction.message.partial) await reaction.message.fetch();
+    if(user.bot) return;
+
+    
+ //TGIF RR START
+  if(reaction.message.channel.id === '709374096244342794'){
+
+// TFIF RR START
+        if(reaction.emoji.id === '625018034808946699'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.remove("526472321930887169")
+            
+        }
+        else if(reaction.emoji.id === '625020976899293206'){ 
+
+            await reaction.message.guild.members.cache.get(user.id).roles.remove("523870470131548165")
+            
+        }
+        else if(reaction.emoji.id === '625018401395441704'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.remove("563510639478308864")
+            
+        }
+        else if(reaction.emoji.id === '625018132746207233'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.remove("533770641636327425")
+            
+        }
+        else if(reaction.emoji.id === '625019053571833866'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.remove("564455132012740608")
+            
+        }
+        else if(reaction.emoji.id === '768242486245851136'){
+
+            await reaction.message.guild.members.cache.get(user.id).roles.remove("741830919744127088")
+            
+        }
+      
+        }
+ // TGIF RR END
+})
+
+client.login('TOKEN');    
+
