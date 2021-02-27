@@ -1,3 +1,4 @@
+
 const Discord = require('discord.js');
 const ytdl = require('ytdl-core')
 const ytSearch = require('yt-search')
@@ -87,7 +88,7 @@ else if(command === 'feed'){
 //Status Commands
 
 if(message.author.id === `REPLACE WITH BOT OWNERS ID`){ //Prevents anyone from using these commands
-else if(command === 'setstatusvisibility' || command === 'setstatusvis'){
+ if(command === 'setstatusvisibility' || command === 'setstatusvis'){
  
      statusVisibility = args.join(" ").slice(0).toLowerCase();
     
@@ -154,7 +155,7 @@ else if(command === 'invite'){
     client.commands.get('invite').execute(message,args)
 }
 if(message.author.id === `200221488035397632`){
-else if(command === 'reactions'){
+ if(command === 'reactions'){
 
     const reactionEmbed = new Discord.MessageEmbed()
         .setTitle('Reaction Roles')
@@ -177,7 +178,7 @@ else if(command === 'reactions'){
 else if(command === 'play'){
 client.commands.get('play').execute(message,args);
 }
-})
+}})
 
 
 
@@ -228,6 +229,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
             
         }  */
  
+}
 })
 
 //  When they unreact
@@ -249,6 +251,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
             
         }*/
    
+}
 })
 
 
@@ -341,7 +344,6 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
     }  catch(err){console.log(err)}
   }
   
-    
 
 })
 
