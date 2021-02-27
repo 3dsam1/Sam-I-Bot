@@ -1,0 +1,68 @@
+//RR ADD
+if(reaction.emoji.id === '625018034808946699'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.add("526472321930887169")
+    
+}
+else if(reaction.emoji.id === '625020976899293206'){ 
+
+    await reaction.message.guild.members.cache.get(user.id).roles.add("523870470131548165")
+    
+}
+else if(reaction.emoji.id === '625018401395441704'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.add("563510639478308864")
+    
+}
+else if(reaction.emoji.id === '625018132746207233'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.add("533770641636327425")
+    
+}
+else if(reaction.emoji.id === '625019053571833866'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.add("564455132012740608")
+    
+}
+else if(reaction.emoji.id === '768242486245851136'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.add("741830919744127088")
+  
+}
+
+}
+
+// RR REMOVE
+
+if(reaction.emoji.id === '625018034808946699'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.remove("526472321930887169")
+    
+}
+else if(reaction.emoji.id === '625020976899293206'){ 
+
+    await reaction.message.guild.members.cache.get(user.id).roles.remove("523870470131548165")
+    
+}
+else if(reaction.emoji.id === '625018401395441704'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.remove("563510639478308864")
+    
+}
+else if(reaction.emoji.id === '625018132746207233'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.remove("533770641636327425")
+    
+}
+else if(reaction.emoji.id === '625019053571833866'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.remove("564455132012740608")
+    
+}
+else if(reaction.emoji.id === '768242486245851136'){
+
+    await reaction.message.guild.members.cache.get(user.id).roles.remove("741830919744127088")
+    
+}
+
+}
