@@ -1,31 +1,46 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
-var prefix = '?';
-
+const ytdl = require('ytdl-core')
+const ytSearch = require('yt-search')
 const fs = require('fs');
-const funCommand = 'testing';
+
+const client = new Discord.Client();
+var prefix = 's!'
+
+
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands/').filter(file=> file.endsWith('.js'));
+
+let statusType = 'PLAYING'
+let statusName = 'Games'
+let statusVisibility = 'online'
+
+
+
 
 for(const file of commandFiles){
     const command = require(`./commands/${file}`);
 
     client.commands.set(command.name, command);
         
-    console.log(command)
+console.log(command)
 }
+
 var anime = `anime`; 
 
+const inviteLink = 'https://discord.com/oauth2/authorize?client_id=573922643527335938&scope=bot&permissions=875785342' // replace with proper invite link for main server
+
 //bot bootup
+
 client.once('ready', () => {
-    console.log('Bot is online')
-   client.channels.fetch('763703586592784395') .then(channel => {
-    channel.send('Sam-I-Bot is back online! Sorry for the down time.')
- 
-})
-})
+    console.log('The bot is online')
+
+client.user.setPresence({ activity: { name: statusName, type: statusType }, status: statusVisibility })
+.then(console.log)
+  .catch(console.error);
 
 // prefix commands
+
+
 client.on('message', async message => {
 if(!message.content.startsWith(prefix) || message.author.bot ) return;
 
@@ -34,16 +49,24 @@ const command = args.shift(). toLowerCase(); // going to shift all commands to l
 
 
 
-if(command === 'ping'){
-    client.commands.get('ping').execute(message, args); 
-}   
+ if(command === 'ping'){
+        message.channel.send(new Discord.MessageEmbed().setTitle("Pinging...")
+        .setDescription("Please wait.")).then(pingMessage => {
+            var ping = pingMessage.createdTimestamp - message.createdTimestamp;
+    
+            pingMessage.edit(new Discord.MessageEmbed().setTitle("Latency :ping_pong:")
+                .setDescription(`Bot: ${ping} ms\nAPI: ${client.ws.ping} ms`))
+        });
+        
+    
+    }   
  else if(command === 'kick'){
-     client.commands.get('moderation').execute(message, args)
+     client.commands.get('kick').execute(message, args)
 }
 else if(command === 'ban'){
     client.commands.get('ban').execute(message,args)
 }
-else if(command === 'poll'){
+else if(command === 'qp'){
     client.commands.get('poll').execute(message,args)
 }
 else if(command === 'avatar'){
@@ -59,38 +82,83 @@ else if(command === 'clear'){
 else if(command === 'feed'){
     client.commands.get('feed').execute(message,args)
 }
-else if(command === 'dm'){
-    message.author.send('I dmed you')
-}
-else if(command === 'setanime'){
-    args.join(" ").slice(32);
 
-    if(args < 1){
-        message.channel.send('You need to specify which anime you are watching!')
-    }
+
+//Status Commands
+
+if(message.author.id === `REPLACE WITH BOT OWNERS ID`){ //Prevents anyone from using these commands
+else if(command === 'setstatusvisibility' || command === 'setstatusvis'){
+ 
+     statusVisibility = args.join(" ").slice(0).toLowerCase();
     
-    else{
-        message.channel.send(`You have set the current anime to ${args.join(" ")}`)
-        anime = args.join(" ");
-    }
+        if(statusVisibility === 'online'){
+            client.user.setPresence({ activity: { name: statusName, type: statusType }, status: statusVisibility })
+            message.channel.send(`The status type has been set to ${statusVisibility}`)
+        }
+    
+        else if(statusVisibility === 'idle'){
+            client.user.setPresence({ activity: { name: statusName, type: statusType }, status: statusVisibility })
+            message.channel.send(`The status type has been set to ${statusVisibility}`)
+        }
 
-}    
-else if(command === 'anime'){
-    message.channel.send(`The current anime that we are watching is ${anime}`)
+        
+        else if(statusVisibility === 'dnd'){
+            client.user.setPresence({ activity: { name: statusName, type: statusType }, status: statusVisibility })
+            message.channel.send(`The status type has been set to ${statusVisibility}`)
+        }
+
+        else if(statusVisibility === 'offline'){
+            client.user.setPresence({ activity: { name: statusName, type: statusType }, status: statusVisibility })
+            message.channel.send(`The status type has been set to ${statusVisibility}`)
+        }
+        else{
+            message.channel.send("That is not a valid status visiblity. Please choose online, idle, offline, or dnd. Please ensure you do not include capital letters.")
+        }
+       
 }
-else if (command === ' invite'){
-    message.channel.send('https://discord.com/oauth2/authorize?client_id=573922643527335938&scope=bot&permissions=8')
+
+else if(command === 'setstatustype'){
+     statusType = args.join(" ").slice(0).toUpperCase();
+    
+        if(statusType === 'WATCHING'){
+            client.user.setPresence({ activity: { name: statusName, type: statusType }, status: statusVisibility })
+            message.channel.send(`The status type has been set to ${statusType}`)
+        }
+    
+        else if(statusType === 'PLAYING'){
+            client.user.setPresence({ activity: { name: statusName, type: statusType }, status: statusVisibility })
+            message.channel.send(`The status type has been set to ${statusType}`)
+        }
+
+        
+        else if(statusType === 'LISTENING'){
+            client.user.setPresence({ activity: { name: statusName, type: statusType }, status: statusVisibility })
+            message.channel.send(`The status type has been set to ${statusType}`)
+        }
+
+        else{
+            message.channel.send("That is not a valid status type. Please choose WATCHING, PLAYING, or LISTENING, and include it in capital letters.")
+           
+        }
+       
 }
+else if(command === 'setstatusname'){
+    statusName = args.join(" ").slice(0);
+    
+        
+       client.user.setPresence({ activity: { name: statusName, type: statusType }, status: statusVisibility })
+            message.channel.send(`The status name has been changed to ${statusName}`)
 
-
-
-
-// TGIF RR EMBED
-else if(command === 'createreactionstgif'){
+}
+else if(command === 'invite'){
+    client.commands.get('invite').execute(message,args)
+}
+if(message.author.id === `200221488035397632`){
+else if(command === 'reactions'){
 
     const reactionEmbed = new Discord.MessageEmbed()
         .setTitle('Reaction Roles')
-        .setDescription('React to gain the role!' )
+        .setDescription('React to gain the role!')
         .setColor('RED')
 
     let msgEmbed = await message.channel.send(reactionEmbed)
@@ -105,20 +173,41 @@ else if(command === 'createreactionstgif'){
         console.log(err)
     })
 }
-
+}
+else if(command === 'play'){
+client.commands.get('play').execute(message,args);
+}
 })
 
+
+
+
 // fun commands (w/o prefix)
+
 client.on('message', async message => {
 const args = message.content.slice(prefix.length).split(" ");
 const command = args.shift(). toLowerCase();
+const user = message.author;
+
 if (message.author.bot) return;
+
+
 if(!message.content.startsWith(prefix)){
-   client.commands.get('funCommands').execute(message, args)
-
-
+    if(message.content. toLowerCase().includes(`${wordOfTheDay}`)){
+       if (!client.channels.fetch() === '738244507711176714') return
+        else{
+            if(message.content.toLowerCase().startsWith(wordOfTheDay)){
+               
+    }
+    
+    message.channel.send(`${message.author.displayName} has used the wotd`)
+    await message.guild.members.cache.get(user).roles.add("740789104345743451")
 }
-})
+    }
+   else {client.commands.get('funCommands').execute(message, args)}
+};
+
+});
 
 
 // reaction roles
@@ -128,97 +217,170 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
     if(reaction.message.partial) await reaction.message.fetch();
     if(user.bot) return;
-
-        
-  // TGIF RR START
-    if(reaction.message.channel.id === '709374096244342794'){
-  
+ 
     
+    if(reaction.message.channel.id === 'Replace with RR channel'){
+  
+        // copy paste this if for new reaction roles.
+  /*      if(reaction.emoji.name === 'Emoji'){
 
-
-
-      if(reaction.emoji.id === '625018034808946699'){
-
-            await reaction.message.guild.members.cache.get(user.id).roles.add("526472321930887169")
+            await reaction.message.guild.members.cache.get(user.id).roles.add("Role ID")
             
-        }
-    else if(reaction.emoji.id === '625020976899293206'){ 
-
-            await reaction.message.guild.members.cache.get(user.id).roles.add("523870470131548165")
-            
-        }
-        else if(reaction.emoji.id === '625018401395441704'){
-
-            await reaction.message.guild.members.cache.get(user.id).roles.add("563510639478308864")
-            
-        }
-        else if(reaction.emoji.id === '625018132746207233'){
-
-            await reaction.message.guild.members.cache.get(user.id).roles.add("533770641636327425")
-            
-        }
-        else if(reaction.emoji.id === '625019053571833866'){
-
-            await reaction.message.guild.members.cache.get(user.id).roles.add("564455132012740608")
-            
-        }
-        else if(reaction.emoji.id === '768242486245851136'){
-
-            await reaction.message.guild.members.cache.get(user.id).roles.add("741830919744127088")
-            
-        }
-      
-      
-    }
- // TGIF RR END
+        }  */
+ 
 })
 
-
 //  When they unreact
+
+
 client.on('messageReactionRemove', async (reaction, user) => {
 
     if(reaction.message.partial) await reaction.message.fetch();
     if(user.bot) return;
+ 
 
-    
- //TGIF RR START
-  if(reaction.message.channel.id === '709374096244342794'){
+ 
+  if(reaction.message.channel.id === 'Replace with RR channel'){
 
-// TFIF RR START
-        if(reaction.emoji.id === '625018034808946699'){
+    // copy paste this if for new reaction roles. 
+      /*  if(reaction.emoji.name === '✔'){
 
-            await reaction.message.guild.members.cache.get(user.id).roles.remove("526472321930887169")
+            await reaction.message.guild.members.cache.get(user.id).roles.remove("763742023328989204")
             
-        }
-        else if(reaction.emoji.id === '625020976899293206'){ 
-
-            await reaction.message.guild.members.cache.get(user.id).roles.remove("523870470131548165")
-            
-        }
-        else if(reaction.emoji.id === '625018401395441704'){
-
-            await reaction.message.guild.members.cache.get(user.id).roles.remove("563510639478308864")
-            
-        }
-        else if(reaction.emoji.id === '625018132746207233'){
-
-            await reaction.message.guild.members.cache.get(user.id).roles.remove("533770641636327425")
-            
-        }
-        else if(reaction.emoji.id === '625019053571833866'){
-
-            await reaction.message.guild.members.cache.get(user.id).roles.remove("564455132012740608")
-            
-        }
-        else if(reaction.emoji.id === '768242486245851136'){
-
-            await reaction.message.guild.members.cache.get(user.id).roles.remove("741830919744127088")
-            
-        }
-      
-        }
- // TGIF RR END
+        }*/
+   
 })
 
-client.login('TOKEN');    
 
+
+client.on('messageDelete', messageDelete => {
+    
+    const logChannel = client.channels.fetch(`766236272321757204`);
+    let UserMessageDeleted = messageDelete.author.toString();
+    const usersDeletedMessage = UserMessageDeleted.toString() 
+
+    client.channels.fetch(`766236272321757204`).then(message => {message.send(`${UserMessageDeleted}'s message: ${messageDelete} was deleted.`)})
+
+
+}
+)
+
+client.on('voiceStateUpdate', async (oldState, newState) => {
+    const newUserChannel = oldState
+    const oldUserChannel = newState
+    const logChannel = client.channels.fetch(`766236272321757204`);
+
+
+    if(newState.channelID === null) {
+      if(newState.id !== '763860662564159499') {
+          client.channels.fetch(`766236272321757204`).then(message => {message.send(`${newState.member} has left a voice channel`)})
+        }
+        }
+
+  if(oldState.channelID === null){
+    const voiceChannel = client.channels.cache.find(channel => channel.id === newState.channelID)
+   
+
+    // const userSBSettings = seek: x, volume: y }
+    const camSBSettings = { seek: 4, volume: 1 }
+    const joelSBSettings = { seek: 16, volume: 0.8 }
+    const defaultSBSettings = { seek: 0, volume: 1}
+    
+
+
+    //const userSB = ytdl('User Video', { filter : 'audioonly'});
+    const joelSB = ytdl('https://www.youtube.com/watch?v=012YIyFI2AI', { filter : 'audioonly'});
+    const camSB = ytdl('https://www.youtube.com/watch?v=c90JoVMqz5o', { filter : 'audioonly'});
+    const caidenSB = ytdl('https://www.youtube.com/watch?v=m6mptCsaWcY', { filter : 'audioonly'});
+
+
+      if(oldState.id !== '763860662564159499'){
+          console.log('User has joined a voice channel')}
+
+      try{
+          /* 
+          if(newState.id === 'USERS ID'){
+
+        console.log('USERNAME JOIN SOUND')
+            connection.play(USERSB, defaultSBSettings)
+            .on('finish', () =>{
+                voiceChannel.leave();
+            });
+      }
+      */
+      if(newState.id === '322897300429209602'){
+        const connection = await voiceChannel.join();
+
+        console.log('CAM JOIN SOUND')
+            connection.play(camSB, camSBSettings)
+            .on('finish', () =>{
+                voiceChannel.leave();
+            });
+      }
+     
+      else if(newState.id === '323069140212645888'){
+        const connection = await voiceChannel.join();
+        
+        console.log('JOEL JOIN SOUND')
+            connection.play(joelSB, joelSBSettings)
+            .on('finish', () =>{
+                voiceChannel.leave();
+            });
+      }
+     else if(newState.id === '350690663416725506'){
+        const connection = await voiceChannel.join();
+
+        console.log('CAIDEN JOIN SOUND')
+            connection.play(caidenSB, defaultSBSettings)
+            .on('finish', () =>{
+                voiceChannel.leave();
+            });
+      }
+      
+      
+    }  catch(err){console.log(err)}
+  }
+  
+    
+ /*   if(oldUserChannel === undefined){
+      client.channels.fetch(`802756833965506590`)
+        .then(channel => channel.send(`oldUserChannel is NOT defined`))}
+
+    if(oldUserChannel !== undefined){
+      client.channels.fetch(`802756833965506590`)
+        .then(channel => channel.send(`oldUserChannel IS defined`))}
+    
+    if(newUserChannel === undefined){
+        client.channels.fetch(`802756833965506590`)
+    .then(channel => channel.send(`newUserChannel is NOT defined`))}
+  
+    if(newUserChannel !== undefined){
+        client.channels.fetch(`802756833965506590`)
+    .then(channel => channel.send(`newUserChannel IS defined`))}
+
+    // When a mic mutes both are NOT defined
+    // 
+/*   if (oldUserChannel === undefined && newUserChannel !== undefined){
+  
+        client.channels.fetch(`802756833965506590`)
+        .then(channel => channel.send(`A user has joined a voice channel`))
+       // User Joins a voice channel
+  
+     } 
+     
+    else if(newUserChannel === undefined && oldUserChannel !== undefined){
+
+        client.channels.fetch(`802756833965506590`)
+        .then(channel => channel.send(`A user has left the voice channel`))
+  
+    }
+*/
+})
+
+
+
+
+
+
+})
+client.login('TOKEN');    
